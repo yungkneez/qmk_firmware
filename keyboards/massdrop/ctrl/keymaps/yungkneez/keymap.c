@@ -52,6 +52,8 @@ void matrix_scan_user(void) {
 #define MODS_SHIFT  (get_mods() & MOD_BIT(KC_LSHIFT) || get_mods() & MOD_BIT(KC_RSHIFT))
 #define MODS_CTRL  (get_mods() & MOD_BIT(KC_LCTL) || get_mods() & MOD_BIT(KC_RCTRL))
 #define MODS_ALT  (get_mods() & MOD_BIT(KC_LALT) || get_mods() & MOD_BIT(KC_RALT))
+#define USB_LED_CAPS_LOCK_ON host_keyboard_leds() & (1<<USB_LED_CAPS_LOCK)
+#define USB_LED_SCROLL_LOCK_ON host_keyboard_leds() & (1<<USB_LED_SCROLL_LOCK)
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     static uint32_t key_timer;
@@ -124,5 +126,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
         default:
             return true; //Process all other keycodes normally
+    }
+}
+
+void rgb_matrix_indicators_user(void) {
+    if (USB_LED_CAPS_LOCK_ON) {
+        rgb_matrix_set_color(50, 255, 255, 255);
+    }
+
+    if (USB_LED_SCROLL_LOCK_ON) {
+        rgb_matrix_set_color(14, 255, 255, 255);
     }
 }
